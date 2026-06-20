@@ -86,12 +86,27 @@ SessionStart（自动注入）
 | 场景 | 触发哪些技能 | 结束时 |
 |------|------------|--------|
 | **新功能** | brainstorming → writing-plans → TDD → ... | closing-the-loop ✅ |
-| **修 bug** | brainstorming（bug澄清+测试场景）→ systematic-debugging → closing-the-loop | closing-the-loop ✅ |
+| **修 bug** | brainstorming（bug澄清+测试场景）→ systematic-debugging → verification-before-completion → closing-the-loop | closing-the-loop ✅ |
 | **改功能/加逻辑** | brainstorming → writing-plans → TDD → ... | closing-the-loop ✅ |
 | **重构** | brainstorming → writing-plans → TDD → ... | closing-the-loop ✅ |
-| **配置变更** | brainstorming → closing-the-loop（mini） | closing-the-loop ✅ |
+| **配置变更** | brainstorming → closing-the-loop（mini，定义见下方） | closing-the-loop ✅ |
 
 **关键原则：只要有代码变更，就必须以 closing-the-loop 收尾。没有例外。**
+
+#### closing-the-loop（mini）定义
+
+配置变更（改 yml/properties/环境变量）不涉及 L3 新知识，走简化版钢印：
+
+| 钢印项 | 完整版 | mini 版 |
+|--------|--------|---------|
+| 1. 代码 push | ✅ | ✅ |
+| 2. 知识库 pull | ✅ | ✅ |
+| 3. L3 experience 更新 | ✅ | ❌ 跳过（配置变更不产生新类/API/模式） |
+| 4. Roadmap 追加 | ✅ | ✅（一行记录即可） |
+| 5. 知识库 push | ✅ | ✅ |
+| L2 回写检查 | ✅ | ❌ 跳过 |
+
+**判据**：如果配置变更涉及了新的技术知识（如"发现某个配置项有版本差异"），升级为完整版 closing-the-loop。
 
 ## 技能列表
 
@@ -163,6 +178,8 @@ SessionStart（自动注入）
 | "这只是修个 bug，不用走完整流程" | bug 修复也是编码任务。systematic-debugging 的第四阶段显式要求触发 closing-the-loop。修完不闭环 = 经验丢失。 |
 | "功能已经写好了，就改一小点，不需要 brainstorming" | "一小点"改动也能引入新 bug。至少走 mini brainstorming + closing-the-loop。 |
 | "这是第二轮改动了，上次已经走过 closing-the-loop" | 每次代码变更独立做 closing-the-loop。上次闭环的是上一轮，这一轮的经验还没记录。 |
+| "这是紧急修复，没时间走流程" | 紧急修复才是最需要纪律的时候——越急越容易引入新 bug。mini brainstorming 只需 2 分钟。不记下来，下次同样紧急。 |
+| "就改一行配置/一个参数，不用走 brainstorming" | "一行"改错可以毁掉整个服务。配置变更至少走 mini brainstorming + closing-the-loop（mini）。 |
 
 ## 用户指令
 
