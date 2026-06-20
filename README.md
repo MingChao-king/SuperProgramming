@@ -1,13 +1,13 @@
-# AgentProgramming
+# SuperProgramming
 
 > 融合 [Superpowers](https://github.com/obra/superpowers) 的结构化开发工作流与四级缓存知识体系的新一代 Claude Code 插件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](.claude-plugin/plugin.json)
 
-## 为什么选择 AgentProgramming？
+## 为什么选择 SuperProgramming？
 
-| 能力 | Superpowers | Agent-Programming | **AgentProgramming (本插件)** |
+| 能力 | Superpowers | Agent-Programming | **SuperProgramming (本插件)** |
 |------|:-----------:|:-----------------:|:-----------------------------:|
 | 结构化工作流 | ✅ | ❌ | ✅ **两者融合** |
 | 苏格拉底式需求澄清 | ✅ | ❌ | ✅ + L4 项目勘探 |
@@ -21,7 +21,7 @@
 | 回写闭环 | ❌ | ✅ | ✅ **保留** |
 | Roadmap 追踪 | ❌ | ✅ | ✅ **保留** |
 
-**AgentProgramming = Superpowers 的工作流引擎 + Agent-Programming 的知识积累体系**
+**SuperProgramming = Superpowers 的工作流引擎 + Agent-Programming 的知识积累体系**
 
 ## 快速开始
 
@@ -30,7 +30,7 @@
 #### 从本地安装
 
 ```bash
-cd /path/to/AgentProgramming
+cd /path/to/SuperProgramming
 /plugin install .
 ```
 
@@ -46,7 +46,7 @@ cd /path/to/AgentProgramming
 
 ### 使用
 
-安装后，**不需要做任何特殊操作**。在新会话开始时，AgentProgramming 会自动注入引导内容。当你说"帮我做一个 XXX"时，Agent 会自动：
+安装后，**不需要做任何特殊操作**。在新会话开始时，SuperProgramming 会自动注入引导内容。当你说"帮我做一个 XXX"时，Agent 会自动：
 
 1. **Brainstorming**：澄清需求 + 探索项目结构 + 产出设计大纲
 2. **Writing Plans**：拆分任务 + 检查可复用组件 + 搜索最优模式
@@ -97,7 +97,7 @@ SessionStart（自动注入）
 
 ## 四级缓存知识体系
 
-这是 AgentProgramming 独有的优势 — **让每次开发都为未来积累资产**：
+这是 SuperProgramming 独有的优势 — **让每次开发都为未来积累资产**：
 
 | 层级 | 类比 | 内容 | 更新频率 |
 |------|------|------|----------|
@@ -117,9 +117,9 @@ SessionStart（自动注入）
 
 ## 与 Superpowers 的关系
 
-AgentProgramming 灵感来源于 Superpowers，吸收了它的结构化工作流引擎（brainstorming → plans → TDD → review → finish），并在此基础上增加了四级缓存知识体系 —— 这是两者最根本的区别。
+SuperProgramming 灵感来源于 Superpowers，吸收了它的结构化工作流引擎（brainstorming → plans → TDD → review → finish），并在此基础上增加了四级缓存知识体系 —— 这是两者最根本的区别。
 
-**Superpowers 让每次任务结构化执行。AgentProgramming 让每次任务都为下一次加速。**
+**Superpowers 让每次任务结构化执行。SuperProgramming 让每次任务都为下一次加速。**
 
 ## 许可证
 
