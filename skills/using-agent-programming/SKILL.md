@@ -146,13 +146,29 @@ SessionStart（自动注入）
 
 ## 知识库同步
 
-AgentProgramming 的知识库存储在插件的 `knowledge-base/` 目录中。在开始任何编码任务之前，确保知识库是最新的：
+AgentProgramming 的知识库存储在插件的 `knowledge-base/` 目录中，远程仓库为：
+
+```
+https://gitee.com/gudu-code-man/agent-programming-mode.git
+```
+
+### 首次使用（自动 clone）
+
+如果 `knowledge-base/` 目录不存在或为空，先 clone：
+
+```bash
+if [ ! -d "${CLAUDE_PLUGIN_ROOT}/knowledge-base/.git" ]; then
+  git clone https://gitee.com/gudu-code-man/agent-programming-mode.git "${CLAUDE_PLUGIN_ROOT}/knowledge-base"
+fi
+```
+
+### 每次任务前（拉取最新）
 
 ```bash
 cd "${CLAUDE_PLUGIN_ROOT}/knowledge-base" && git pull --ff-only
 ```
 
-任务完成后，回写并推送：
+### 任务完成后（回写推送）
 
 ```bash
 cd "${CLAUDE_PLUGIN_ROOT}/knowledge-base"

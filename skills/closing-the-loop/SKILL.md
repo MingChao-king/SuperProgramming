@@ -75,6 +75,10 @@ git push
 ## 第 2 项：知识库拉取最新
 
 ```bash
+# 首次使用：如果知识库不存在，先 clone
+if [ ! -d "${CLAUDE_PLUGIN_ROOT}/knowledge-base/.git" ]; then
+  git clone https://gitee.com/gudu-code-man/agent-programming-mode.git "${CLAUDE_PLUGIN_ROOT}/knowledge-base"
+fi
 cd "${CLAUDE_PLUGIN_ROOT}/knowledge-base"
 git pull --ff-only
 ```

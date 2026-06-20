@@ -16,5 +16,4 @@ Thumbs.db
 *.tmp
 *.log
 
-# Knowledge base (managed separately, cloned at runtime)
-knowledge-base/
+# Note: knowledge-base/ is tracked — it's the core knowledge repository
