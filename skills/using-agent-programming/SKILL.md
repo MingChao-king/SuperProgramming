@@ -85,11 +85,13 @@ SessionStart（自动注入）
 
 | 场景 | 触发哪些技能 | 结束时 |
 |------|------------|--------|
-| **新功能** | brainstorming → writing-plans → TDD → ... | closing-the-loop ✅ |
+| **新功能** | brainstorming（含测试场景设计）→ writing-plans → TDD（执行测试场景）→ ... | closing-the-loop ✅ |
 | **修 bug** | brainstorming（bug澄清+测试场景）→ systematic-debugging → verification-before-completion → closing-the-loop | closing-the-loop ✅ |
-| **改功能/加逻辑** | brainstorming → writing-plans → TDD → ... | closing-the-loop ✅ |
-| **重构** | brainstorming → writing-plans → TDD → ... | closing-the-loop ✅ |
+| **改功能/加逻辑** | brainstorming（含测试场景设计）→ writing-plans → TDD（执行测试场景）→ ... | closing-the-loop ✅ |
+| **重构** | brainstorming（含测试场景设计）→ writing-plans → TDD（执行测试场景）→ ... | closing-the-loop ✅ |
 | **配置变更** | brainstorming → closing-the-loop（mini，定义见下方） | closing-the-loop ✅ |
+
+**关键原则：测试场景设计是 brainstorming 的事，TDD 负责执行。** TDD 不重新设计测试场景——它从 brainstorming 产出中加载测试场景，转化为可执行的测试代码。如果 brainstorming 没产出测试场景，退回 brainstorming 补全再进 TDD。
 
 **关键原则：只要有代码变更，就必须以 closing-the-loop 收尾。没有例外。**
 
@@ -172,6 +174,7 @@ SessionStart（自动注入）
 | "这个技能太小题大做了" | 简单的事情会变复杂。使用它。 |
 | "我就先做这一件事" | 在做任何事**之前**先检查。 |
 | "先写代码比较快" | 无纪律的行动浪费时间。技能能防止这一点。 |
+| "TDD 太费时间了，代码写完再补测试" | 不写测试省 10 分钟 → 上线出 bug → 排查 2 小时 → 修 bug 2 小时。先写测试花 20 分钟。选哪个很清楚。TDD 的价值一半在 RED 阶段的设计思考——不先写测试说明你没想清楚代码要干什么。 |
 | "我知道那是什么意思" | 知道概念 ≠ 使用技能。调用它。 |
 | "这个经验太简单不值得记" | 今天"简单"的经验，明天就忘了。L2/L3 就是靠这些小经验积累的。 |
 | "先跳过回写，下次再补" | 回写是任务的一部分，不是可选的。不写 = 没完成。 |

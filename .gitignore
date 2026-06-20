@@ -16,4 +16,5 @@ Thumbs.db
 *.tmp
 *.log
 
-# Note: knowledge-base/ is tracked — it's the core knowledge repository
+# knowledge-base/ is a separate git repo (gitee) — never commit to code repo
+knowledge-base/
