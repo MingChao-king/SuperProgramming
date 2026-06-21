@@ -17,6 +17,7 @@ the plugin enforces is the same one used to build it.
 3. **TDD 三元组**: RED(test first) → GREEN(minimal impl) → REFACTOR(clean).
 4. **闭环**: Every task ends with the 5-item stamp.
 5. **防重复**: 7-item checklist before creating anything new.
+6. **用户级同步**: Any change to CLAUDE-TEMPLATE.md or this CLAUDE.md MUST sync to `C:\Users\15380\.claude\CLAUDE.md`. Plugin ↔ user-level strict alignment is non-negotiable.
 
 Full methodology: use `Skill` tool → superprogramming skills. See CLAUDE-TEMPLATE.md for the project-level CLAUDE.md template.
 
