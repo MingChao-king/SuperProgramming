@@ -86,7 +86,7 @@ SessionStart（自动注入）
 | 技能 | 用途 | 类型 |
 |------|------|------|
 | `systematic-debugging` | 四阶段根因分析 + L4 仲裁 | 刚性 |
-| `requesting-code-review` | 对照计划审查 + L3 契约检查 | 柔性 |
+| `requesting-code-review` | 8 维度极致审查（正确性/安全/并发/回归等） | 刚性 |
 | `verification-before-completion` | 确认修复 + 冒烟测试 | 刚性 |
 
 ### 基础设施技能

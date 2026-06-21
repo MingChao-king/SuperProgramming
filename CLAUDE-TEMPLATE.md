@@ -55,13 +55,13 @@ Use the `Skill` tool with these exact names. Never read skill files manually.
 | ≥2 independent tasks | `superprogramming:subagent-driven-development` |
 | Parallel scheduling | `superprogramming:dispatching-parallel-agents` |
 | Bug encountered | `superprogramming:systematic-debugging` |
-| Before merging | `superprogramming:requesting-code-review` |
+| After TDD, before verification | `superprogramming:requesting-code-review` |
 | Claiming "done" | `superprogramming:verification-before-completion` |
 | All tasks complete | `superprogramming:closing-the-loop` |
 | Branch cleanup | `superprogramming:finishing-a-development-branch` |
 | Parallel branches | `superprogramming:using-git-worktrees` |
 
-**Rigid skills** (TDD, subagent-driven-development, systematic-debugging, closing-the-loop, verification-before-completion): Follow strictly. No steps can be skipped.
+**Rigid skills** (TDD, subagent-driven-development, systematic-debugging, requesting-code-review, closing-the-loop, verification-before-completion): Follow strictly. No steps can be skipped.
 **Flexible skills** (brainstorming, writing-plans, dispatching-parallel-agents): Adapt principles to context, but core steps are mandatory.
 
 ---

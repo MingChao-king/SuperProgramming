@@ -39,7 +39,7 @@ Skill: superprogramming:<skill-name>
 | `test-driven-development` | 实现阶段 | **刚性** |
 | `subagent-driven-development` | ≥2 个独立任务 | **刚性** |
 | `systematic-debugging` | 遇到 bug | **刚性** |
-| `requesting-code-review` | 任务完成、合并前 | 柔性 |
+| `requesting-code-review` | TDD 完成后、verification 前（8 维度极致审查） | **刚性** |
 | `verification-before-completion` | 声称"完成"前 | **刚性** |
 | `closing-the-loop` | 所有任务完成后 | **刚性** |
 | `finishing-a-development-branch` | 闭环完成后 | 柔性 |
