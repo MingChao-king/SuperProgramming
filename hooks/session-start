@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
-# SessionStart hook for agent-programming plugin
-# Injects the using-agent-programming bootstrap skill at session startup
+# SessionStart hook for SuperProgramming plugin
+# Injects a lightweight bootstrap — methodology and project constraints
+# live in CLAUDE.md (auto-loaded by Claude Code) and L1 (knowledge base).
 
 set -euo pipefail
 
-# Determine plugin root directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Read using-agent-programming content
-using_ap_content=$(cat "${PLUGIN_ROOT}/skills/using-agent-programming/SKILL.md" 2>&1 || echo "Error reading using-agent-programming skill")
-
-# Escape string for JSON embedding using bash parameter substitution.
 escape_for_json() {
     local s="$1"
     s="${s//\\/\\\\}"
@@ -22,19 +18,53 @@ escape_for_json() {
     printf '%s' "$s"
 }
 
-using_ap_escaped=$(escape_for_json "$using_ap_content")
-session_context="<EXTREMELY_IMPORTANT>\nYou are powered by SuperProgramming.\n\n**Below is the full content of your 'superprogramming:using-agent-programming' skill - your introduction to the SuperProgramming methodology. For all other skills, use the 'Skill' tool:**\n\n${using_ap_escaped}\n</EXTREMELY_IMPORTANT>"
+# Lightweight bootstrap — ~600 tokens.
+# The full methodology lives in:
+#   1. Project root CLAUDE.md (auto-loaded by Claude Code)
+#   2. L1: agent编程守则.md in the knowledge base
+#   3. Individual skill files (loaded via Skill tool on demand)
+bootstrap=$(cat <<'BOOTSTRAP'
+<EXTREMELY-IMPORTANT>
+You are powered by **SuperProgramming** — structured development with a four-level cache knowledge system.
 
-# Output context injection as JSON.
-# Claude Code hooks expect hookSpecificOutput.additionalContext (nested).
-# Cursor hooks expect additional_context (snake_case).
-# Copilot CLI and others expect additionalContext (top-level, SDK standard).
+## FIRST: Read CLAUDE.md
+If a CLAUDE.md exists in the project root, it contains this project's development constraints,
+code patterns, and the SuperProgramming methodology. Read it first.
+
+## Skill Discovery
+Use the `Skill` tool with these exact names. **Never read skill files manually.**
+
+| Skill | When |
+|-------|------|
+| `superprogramming:brainstorming` | Before any coding task |
+| `superprogramming:writing-plans` | After design is approved |
+| `superprogramming:test-driven-development` | During implementation (rigid) |
+| `superprogramming:subagent-driven-development` | ≥2 independent tasks (rigid) |
+| `superprogramming:systematic-debugging` | Bug encountered (rigid) |
+| `superprogramming:requesting-code-review` | Before merging |
+| `superprogramming:verification-before-completion` | Before claiming "done" (rigid) |
+| `superprogramming:closing-the-loop` | After all tasks complete (rigid) |
+| `superprogramming:finishing-a-development-branch` | Branch cleanup |
+| `superprogramming:using-git-worktrees` | Parallel branch work |
+
+## Hard Gates
+- If ANY SuperProgramming skill has ≥1% applicability to what you're doing, you MUST call it.
+  This is non-negotiable. "Simple", "quick", "just one line" is not an excuse to skip skills.
+- User instructions ALWAYS override skill instructions. The user controls the workflow.
+- "I remember this skill" → Skills evolve. Load the current version via the Skill tool.
+</EXTREMELY-IMPORTANT>
+BOOTSTRAP
+)
+
+bootstrap_escaped=$(escape_for_json "$bootstrap")
+
+# Output JSON for the hosting platform.
 if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
-  printf '{\n  "additional_context": "%s"\n}\n' "$session_context" | cat
+  printf '{\n  "additional_context": "%s"\n}\n' "$bootstrap_escaped" | cat
 elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
-  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$bootstrap_escaped" | cat
 else
-  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context" | cat
+  printf '{\n  "additionalContext": "%s"\n}\n' "$bootstrap_escaped" | cat
 fi
 
 exit 0
