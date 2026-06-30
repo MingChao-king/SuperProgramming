@@ -1,315 +1,316 @@
 ---
 name: implementing
-description: writing-plans 完成后激活。逐功能执行 TDD(RED→GREEN→REFACTOR) → subagent 8维审查 → 子功能全量测试 → 全部通过后全场景集成测试。Bug 修复走同流程。刚性技能。
+description: Activated after writing-plans completes. Execute TDD (RED→GREEN→REFACTOR) per sub-function → subagent 8-Dimension Review → Sub-function Full Testing → Full-Scenario Integration Testing after all pass. Bug fixes follow the same flow. Rigid skill.
 ---
 
 <EXTREMELY-IMPORTANT>
-此技能是刚性技能。每个功能必须走完整循环：TDD → 审查 → 子功能全量测试。
-跳过任一环节 = 未经验证的代码进入主分支。
+This skill is rigid. Every sub-function must complete the full loop: TDD → Review → Sub-function Full Testing.
+Skipping any step = unverified code entering the main branch.
 
-如果 writing-plans 已有拆分好的任务组，按任务组逐个执行。
-如果是 Bug 修复（无 writing-plans），走 Bug 修复模式。
+If writing-plans already produced a task group breakdown, execute them group by group.
+If this is a bug fix (no writing-plans), use Bug Fix Mode.
 
-如果你在想"这个功能太简单了，快速过一下"——读 Red Flags。
+If you find yourself thinking "this feature is too simple, let me just quickly go through it" — read Red Flags.
 </EXTREMELY-IMPORTANT>
 
-# Implementing：TDD → 审查 → 测试
+# Implementing: TDD → Review → Testing
 
-## 技能类型：刚性
+## Skill Type: Rigid
 
-严格遵循。每个子功能走完整循环，全部通过后走全场景集成测试。不可跳过。
-
----
-
-## 核心哲学
-
-**实现 ≠ 写完代码。实现 = 写完代码 + 证明它正确 + 证明它没有破坏其他功能。**
-
-```
-一个子功能的完整循环：
-  TDD(RED→GREEN→REFACTOR) → subagent 8维审查(P0/P1清零) → 子功能全量测试
-                                                                      │
-所有子功能通过后：                                                      │
-  全场景集成测试（跨功能组合场景）────────────────────────────────────────┘
-```
+Follow strictly. Every sub-function goes through the full loop; after all pass, proceed to Full-Scenario Integration Testing. No skipping.
 
 ---
 
-## 前置检查
+## Core Philosophy
 
-| # | 检查项 | 说明 |
-|---|--------|------|
-| 1 | writing-plans 已产出任务清单？ | 每任务拆好 RED→GREEN→REFACTOR |
-| 2 | brainstorming 已产出测试场景？ | 2 层 × 4 类场景（隔离/边界/并发/异常） |
-| 3 | roadmap §4 已查阅？ | 确认无重复造轮子 |
-| 4 | L2 通用经验已搜索？ | 推荐 subagent 搜索 |
+**Implementation != writing code. Implementation = writing code + proving it correct + proving it didn't break anything else.**
+
+```
+Full loop for one sub-function:
+  TDD(RED→GREEN→REFACTOR) → subagent 8-Dimension Review (P0/P1 cleared) → Sub-function Full Testing
+                                                                                    │
+After all sub-functions pass:                                                       │
+  Full-Scenario Integration Testing (cross-feature combination scenarios) ──────────┘
+```
 
 ---
 
-## 逐功能循环（每个任务组独立执行）
+## Pre-Flight Checks
+
+| # | Check Item | Notes |
+|---|------------|-------|
+| 1 | writing-plans produced a task list? | Each task broken down into RED→GREEN→REFACTOR |
+| 2 | brainstorming produced test scenarios? | 2 layers x 4 scenario types (isolation/boundary/concurrency/exception) |
+| 3 | roadmap §4 consulted? | Confirm no wheel reinvention |
+| 4 | L2 general experience searched? | Subagent search recommended |
+
+---
+
+## Per-Function Loop (each task group executed independently)
 
 ```
-writing-plans 任务清单
+writing-plans task list
        │
        ▼
-┌─────────────────────────────────────────────┐
-│ 对每个任务组 X：                              │
-│                                             │
-│ Step 1: TDD                                │
-│   X-R  RED：先写测试 → 确认 FAIL             │
-│   X-G  GREEN：最小实现 + L4 签名验证 → PASS   │
-│   X-F  REFACTOR：清理 → 保持 PASS            │
-│                                             │
-│ Step 2: Subagent 8 维审查（并行派发）         │
-│   → 汇总 → P0/P1 清零 → 记录于 roadmap §5    │
-│                                             │
-│ Step 3: 子功能全量测试（subagent 并行）        │
-│   → 边界/null/并发/异常全覆盖                 │
-│   → 全部通过 → 记录于 roadmap §5             │
-│                                             │
-│ 任一环节不通过 → 修复 → 从失败环节重来         │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│ For each task group X:                          │
+│                                                 │
+│ Step 1: TDD                                     │
+│   X-R  RED: write test first → confirm FAIL      │
+│   X-G  GREEN: minimal impl + L4 signature verify → PASS │
+│   X-F  REFACTOR: clean up → keep PASS            │
+│                                                 │
+│ Step 2: Subagent 8-Dimension Review (parallel dispatch) │
+│   → aggregate → clear P0/P1 → record in roadmap §5      │
+│                                                 │
+│ Step 3: Sub-function Full Testing (subagent parallel)   │
+│   → full boundary/null/concurrency/exception coverage    │
+│   → all pass → record in roadmap §5              │
+│                                                 │
+│ Any step fails → fix → retry from the failed step│
+└─────────────────────────────────────────────────┘
        │
        ▼
-所有任务组通过 → 全场景集成测试 → 进入 closing-the-loop
+All task groups pass → Full-Scenario Integration Testing → enter closing-the-loop
 ```
 
 ---
 
-## Step 1：TDD 循环
+## Step 1: TDD Cycle
 
-### RED：先写测试
-
-```
-→ 从 brainstorming 测试场景加载（2 层 × 4 类）
-→ 每类 ≥2 个测试方法，共 ≥8 个
-→ 方法名表达意图：should_xxx_when_yyy
-→ 运行测试 → 确认全部失败（红）
-→ 如果某个测试直接通过 → 测试写错了
-→ git commit -m "RED: {场景描述}"
-```
-
-### GREEN：最小实现
+### RED: Write Test First
 
 ```
-→ 只写让当前测试通过的代码（YAGNI）
-→ ★ L4 签名验证：Read 至少 3 个调用的关键方法，确认签名一致
-→ 运行测试 → 确认全部通过（绿）
-→ git commit -m "GREEN: {实现描述}"
+→ Load from brainstorming test scenarios (2 layers x 4 types)
+→ ≥2 test methods per type, ≥8 total
+→ Method names express intent: should_xxx_when_yyy
+→ Run tests → confirm all FAIL (red)
+→ If a test passes immediately → the test is written incorrectly
+→ git commit -m "RED: {scenario description}"
 ```
 
-**L4 签名验证（必做）**：
-```
-调用了 UserService.getById(Long id)？
-→ Read UserService.java → 返回类型？异常声明？参数顺序？
-→ LLM 凭记忆写的方法签名有 ~15% 的概率是错的。30 秒验证 > 30 分钟 debug。
-```
-
-### REFACTOR：清理
+### GREEN: Minimal Implementation
 
 ```
-→ 消除重复（DRY）、改善命名、提取常量
-→ 每改一步运行一次测试（保持绿色）
-→ git commit -m "REFACTOR: {清理描述}"
+→ Write only the code needed to make current tests pass (YAGNI)
+→ ★ L4 Signature Verification: Read at least 3 called key methods, confirm signatures match
+→ Run tests → confirm all PASS (green)
+→ git commit -m "GREEN: {implementation description}"
 ```
 
-### Bug 修复的 TDD 模式
+**L4 Signature Verification (mandatory)**:
+```
+Calling UserService.getById(Long id)?
+→ Read UserService.java → return type? exception declarations? parameter order?
+→ LLM method signatures recalled from memory have ~15% chance of being wrong.
+   30 seconds of verification > 30 minutes of debugging.
+```
+
+### REFACTOR: Clean Up
 
 ```
-bug 报告 → RED（写复现测试，确认失败）→ GREEN（应用修复，测试变绿）
-→ 同类搜索（Grep 相同 bug 模式，一并修复）→ REFACTOR
+→ Eliminate duplication (DRY), improve naming, extract constants
+→ Run tests after each change (keep green)
+→ git commit -m "REFACTOR: {cleanup description}"
+```
+
+### Bug Fix TDD Pattern
+
+```
+bug report → RED (write reproduction test, confirm failure) → GREEN (apply fix, test turns green)
+→ same-pattern search (Grep for identical bug pattern, fix all) → REFACTOR
 ```
 
 ---
 
-## Step 2：Subagent 8 维并行审查
+## Step 2: Subagent 8-Dimension Parallel Review
 
-TDD REFACTOR 提交后，立即派发 8 个只读审查子代理（并行）。
+After TDD REFACTOR commit, immediately dispatch 8 read-only reviewer subagents (parallel).
 
-**P0/P1 必须清零才能进入 Step 3。**
+**P0/P1 must be cleared to zero before entering Step 3.**
 
-### 严重度定义
+### Severity Definitions
 
-| 级别 | 含义 | 示例 | 行动 |
-|------|------|------|------|
-| **P0 致命** | 安全漏洞、数据丢失、必现崩溃 | SQL 注入、无条件 NPE、死锁 | **阻塞** |
-| **P1 严重** | 逻辑错误、回归风险、边界缺失 | 用户A可访问用户B数据、事务边界错误 | **阻塞** |
-| **P2 主要** | 模式偏离、重复代码、命名问题 | 未复用已有工具类、异常吞掉 | 应修复 |
-| **P3 建议** | 更好的写法、可选优化 | Stream 替代 for-loop | 可选 |
+| Level | Meaning | Example | Action |
+|-------|---------|---------|--------|
+| **P0 Critical** | Security vulnerability, data loss, guaranteed crash | SQL injection, unconditional NPE, deadlock | **Block** |
+| **P1 Major** | Logic error, regression risk, missing boundary | User A accessing User B data, transaction boundary error | **Block** |
+| **P2 Minor** | Pattern deviation, duplicate code, naming issues | Unused existing utility, swallowed exception | Should fix |
+| **P3 Suggestion** | Better approach, optional optimization | Stream over for-loop | Optional |
 
-### 8 个 Reviewer 并行派发
+### 8 Reviewers Dispatched in Parallel
 
-全部 8 个 reviewer 同时派发。使用 5 段式 prompt，只读。
+All 8 reviewers dispatched simultaneously. Use 5-Segment Prompt, read-only.
 
-| # | Reviewer | 关注点 | 严重度范围 |
-|---|----------|--------|-----------|
-| 1 | 正确性深挖 | 每条代码路径逻辑验证、条件覆盖、类型转换 | P0-P3 |
-| 2 | 空安全/边界 | null 传播链、集合边界、数值溢出、字符串边界 | P0-P2 |
-| 3 | 安全审计 | SQL 注入、越权、敏感数据泄露、输入校验 | P0-P1 |
-| 4 | 并发安全 | 竞态条件、线程安全、幂等性、锁顺序 | P0-P1 |
-| 5 | 错误处理 | 异常覆盖完整性、空 catch、降级、超时 | P0-P2 |
-| 6 | 性能/资源 | N+1 查询、连接泄漏、不必要对象创建 | P1-P3 |
-| 7 | 回归风险 | 调用链影响、API 兼容性、数据库迁移 | P1-P2 |
-| 8 | 契约验证 | API 签名/DTO 字段与设计大纲/roadmap §3 一致性 | P1-P2 |
+| # | Reviewer | Focus | Severity Range |
+|---|----------|------|----------------|
+| 1 | Correctness Deep-Dive | Per-code-path logic verification, condition coverage, type casting | P0-P3 |
+| 2 | Null Safety/Boundaries | Null propagation chain, collection bounds, numeric overflow, string boundaries | P0-P2 |
+| 3 | Security Audit | SQL injection, privilege escalation, sensitive data exposure, input validation | P0-P1 |
+| 4 | Concurrency Safety | Race conditions, thread safety, idempotency, lock ordering | P0-P1 |
+| 5 | Error Handling | Exception coverage completeness, empty catch, degradation, timeout | P0-P2 |
+| 6 | Performance/Resources | N+1 queries, connection leaks, unnecessary object creation | P1-P3 |
+| 7 | Regression Risk | Call chain impact, API compatibility, database migration | P1-P2 |
+| 8 | Contract Verification | API signature/DTO field consistency with design outline/roadmap §3 | P1-P2 |
 
-### 5 段式 Reviewer Prompt 模板
+### 5-Segment Reviewer Prompt Template
 
 ```
-SCOPE: 本次改动的所有源文件（含新增和修改）
+SCOPE: All source files in this change (new and modified)
 
-GOAL: {从上方 8 个 reviewer 中选择对应的 GOAL}
+GOAL: {Select the corresponding GOAL from the 8 reviewers above}
 
 CONSTRAINTS:
-  - 不信任方法名——打开被调用方法的源码验证实际行为
-  - 每条问题引用具体文件:行号
+  - Don't trust method names — open the called method's source to verify actual behavior
+  - Reference every issue with specific file:line
 
 DO NOT:
-  - 不要修改代码（你是只读审查者）
-  - 不要审查非本维度的内容
-  - 不要提出"更好但不在审查范围内"的建议
+  - Do not modify code (you are a read-only reviewer)
+  - Do not review content outside your assigned dimension
+  - Do not propose "better but out of scope" suggestions
 
 RETURN:
-  - 问题列表（文件:行号 + 具体问题 + P0/P1/P2/P3）
-  - 无问题时返回："{维度}：通过"
+  - Issue list (file:line + specific problem + P0/P1/P2/P3)
+  - If no issues: "{Dimension}: Pass"
 ```
 
-### 主代理汇总
+### Main Agent Aggregation
 
 ```
-Step 1: 去重 → 同一问题被多个 reviewer 发现，合并为一条
-Step 2: 排序 → P0 > P1 > P2 > P3
-Step 3: 决策 → P0+P1 = 0 → 进入 Step 3（子功能全量测试）
-              → P0+P1 > 0 → 实施修复 → 仅重审受影响维度（≤3 轮）
-Step 4: 记录 → 审查摘要写入 roadmap §5
+Step 1: Deduplicate → same issue found by multiple reviewers, merge into one
+Step 2: Prioritize → P0 > P1 > P2 > P3
+Step 3: Decide → P0+P1 = 0 → proceed to Step 3 (Sub-function Full Testing)
+               → P0+P1 > 0 → implement fixes → re-review only affected dimensions (≤3 rounds)
+Step 4: Record → review summary written to roadmap §5
 ```
 
-### Review Loop（≤3 轮）
+### Review Loop (≤3 Rounds)
 
-每轮只修 P0/P1，不趁机重构。仅重新派发受影响的 reviewer。第 3 轮仍有 P0/P1 → STOP，主代理介入决策。
+Each round only fixes P0/P1, no opportunistic refactoring. Only re-dispatch affected reviewers. Round 3 still has P0/P1 → STOP, main agent intervenes to decide.
 
 ---
 
-## Step 3：子功能全量测试
+## Step 3: Sub-function Full Testing
 
-P0/P1 清零后，派发测试子代理并行覆盖 4 类场景：
+After P0/P1 cleared to zero, dispatch test subagents in parallel covering 4 scenario types:
 
 ```
-并行派发 4 个测试子代理（Agent 工具）：
+Dispatch 4 test subagents in parallel (Agent tool):
 
-Test A — 边界条件:
-  空参数、null、空列表、极大/极小值、超长字符串
-  RETURN: 通过/失败 + 测试结果
+Test A — Boundary Conditions:
+  Null parameters, null, empty list, max/min values, excessively long strings
+  RETURN: pass/fail + test results
 
-Test B — 隔离/多用户:
-  用户 A 的数据 ≠ 用户 B、不同角色的权限边界
-  RETURN: 通过/失败 + 测试结果
+Test B — Isolation/Multi-User:
+  User A's data ≠ User B's, permission boundaries across roles
+  RETURN: pass/fail + test results
 
-Test C — 并发/竞态:
-  同时操作冲突、重复提交、幂等性
-  RETURN: 通过/失败 + 测试结果
+Test C — Concurrency/Race Conditions:
+  Simultaneous operation conflicts, duplicate submission, idempotency
+  RETURN: pass/fail + test results
 
-Test D — 异常路径:
-  依赖服务不可用、超时、非法参数
-  RETURN: 通过/失败 + 测试结果
+Test D — Exception Paths:
+  Dependent service unavailable, timeout, illegal arguments
+  RETURN: pass/fail + test results
 ```
 
-全部通过 → 此子功能完成，记录于 roadmap §5。任一失败 → 修复 → 重新派发该测试子代理。
+All pass → this sub-function is complete, record in roadmap §5. Any fails → fix → re-dispatch that test subagent.
 
 ---
 
-## 全场景集成测试（所有子功能通过后）
+## Full-Scenario Integration Testing (after all sub-functions pass)
 
 ```
-跨功能组合场景测试（并行派发）：
+Cross-feature combination scenario testing (parallel dispatch):
 
-Scenario 1: 完整业务流程（端到端）
-Scenario 2: 多用户并发操作不同功能
-Scenario 3: 功能间数据传递/状态变更链
-Scenario 4: 异常场景组合（A功能失败→B功能降级）
+Scenario 1: Complete business flow (end-to-end)
+Scenario 2: Multi-user concurrent operations across different features
+Scenario 3: Cross-feature data passing/state change chain
+Scenario 4: Combined exception scenarios (Feature A fails → Feature B degrades)
 ```
 
-全部场景通过 → 进入 closing-the-loop。
+All scenarios pass → enter closing-the-loop.
 
 ---
 
-## Bug 修复模式
+## Bug Fix Mode
 
-当没有 writing-plans 产出时（Bug 修复），走此模式。
+When there are no writing-plans outputs (bug fix), use this mode.
 
-**必须先走 brainstorming**（CLAUDE.md 场景表要求 `brainstorming → implementing(Bug模式)`）。brainstorming 已将 bug 分析 + 修复大纲写入 roadmap。如果 brainstorming 未执行，implementing 必须在写任何代码前完成以下 mini 版并记录 roadmap：
+**Must go through brainstorming first** (workflow requires `brainstorming → implementing(Bug Mode)`). brainstorming should have already written the bug analysis + fix outline to the roadmap. If brainstorming was not executed, implementing must complete this mini version and record to roadmap before writing any code:
 
 ```
-前置：确认 brainstorming 已完成（bug 分析 + 修复大纲已写入 roadmap §5）
-  如未完成 → 先补 mini brainstorming：
-    1. 澄清 bug 现象和影响范围
-    2. 定位涉及的类/方法（git log 最近变更）
-    3. 修复思路（1-3 句话）
-    4. ★ 记录于 roadmap §5（日期 + bug 描述 + 涉及文件 + 修复思路）
-       ↓ 完成后才能进入 RED
+Pre-flight: Confirm brainstorming is complete (bug analysis + fix outline written to roadmap §5)
+  If not → first complete mini brainstorming:
+    1. Clarify bug symptoms and impact scope
+    2. Identify involved classes/methods (git log recent changes)
+    3. Fix approach (1-3 sentences)
+    4. ★ Record in roadmap §5 (date + bug description + files involved + fix approach)
+       ↓ only then proceed to RED
 
-RED（复现测试，确认 bug 存在）
-    → GREEN（最小修复，测试变绿）
-    → REFACTOR（同类 bug 搜索，一并修复）
-    → Subagent 审查（8 维，重点关注回归风险）
-    → 子功能全量测试（4 类场景）
+RED (reproduction test, confirm bug exists)
+    → GREEN (minimal fix, test turns green)
+    → REFACTOR (search for same bug pattern, fix all occurrences)
+    → Subagent Review (8 dimensions, emphasis on Regression Risk)
+    → Sub-function Full Testing (4 scenario types)
     → closing-the-loop
 ```
 
-**不先写复现测试 = 你不知道是"修好了"还是"恰好不报错了"。**
-**不先写 roadmap = 下次别人遇到同类 bug 还是从零开始。**
+**Not writing a reproduction test first = you don't know whether you "fixed it" or it "just happened to stop erroring."**
+**Not writing to roadmap first = the next person hitting a similar bug starts from scratch.**
 
 ---
 
-## Subagent 使用原则
+## Subagent Usage Principles
 
-| 环节 | 工具权限 | 并行数 | 说明 |
-|------|---------|--------|------|
-| TDD (RED/GREEN/REFACTOR) | 全工具 | 1 | 主代理执行或派发 1 implementer |
-| 8 维审查 | 只读 | 8 并行 | 独立 reviewer，互不干扰 |
-| 子功能全量测试 | 只读 | 4 并行 | 4 类场景各一个 |
-| 全场景集成测试 | 只读 | 4 并行 | 跨功能场景 |
+| Phase | Tool Permission | Parallel Count | Notes |
+|-------|----------------|----------------|-------|
+| TDD (RED/GREEN/REFACTOR) | Full | 1 | Main agent executes or dispatches 1 implementer |
+| 8-Dimension Review | Read-only | 8 parallel | Independent reviewers, no cross-interference |
+| Sub-function Full Testing | Read-only | 4 parallel | One per scenario type |
+| Full-Scenario Integration Testing | Read-only | 4 parallel | Cross-feature scenarios |
 
-**Git 操作**（commit、分支管理等）推荐委派给 subagent 执行。主代理负责 roadmap 编写和架构决策。
-
----
-
-## 测试反模式
-
-| 反模式 | 正确做法 |
-|--------|---------|
-| 测试依赖外部服务 | Mock 外部依赖 |
-| 测试之间有顺序依赖 | 每个测试独立 |
-| 方法名不表达意图 | `should_throw_when_email_is_empty()` |
-| 只测 happy path | 覆盖 null、空列表、极大值 |
-| 为了覆盖率写测试 | 测试行为，不测试实现细节 |
-| 写完代码再补测试 | 先写测试——RED 阶段的设计思考是 TDD 价值的一半 |
+**Git operations** (commit, branch management, etc.) are recommended to be delegated to subagents. The main agent is responsible for roadmap writing and architectural decisions.
 
 ---
 
-## Red Flags — 你在跳过质量保证
+## Test Anti-Patterns
 
-| 你的想法 | 真相 |
-|---------|------|
-| "这个功能太简单，不需要审查" | 简单代码也有边界 bug。简单 = 审查更快 = 没有借口。 |
-| "我自己审一下就行，不用 8 个 reviewer" | 你审自己的代码有盲区。独立 reviewer 不带实现者的假设。 |
-| "改动太小，快速过一下" | 一行改错花 2 小时排查。小改动也要 8 维审查。 |
-| "8 个 reviewer 太多了，3-4 个够了" | 你跳过的那 4 个维度就是 bug 逃逸的通道。 |
-| "先写实现，测试后补" | 后补的测试变成"验证实现"而非"验证行为"。TDD 一半价值在 RED 阶段。 |
-| "集成测试手动跑一下就行" | 手动测试 = 这次测了下次忘。自动化后每次都能复现。 |
-| "reviewer 说有问题但我觉得还行" | 不要否决 reviewer。独立判断覆盖了你的盲区。 |
+| Anti-Pattern | Correct Approach |
+|--------------|------------------|
+| Tests depend on external services | Mock external dependencies |
+| Tests have ordering dependencies | Each test is independent |
+| Method names don't express intent | `should_throw_when_email_is_empty()` |
+| Only testing happy path | Cover null, empty list, max values |
+| Writing tests for coverage metrics | Test behavior, not implementation details |
+| Writing tests after code is done | Write tests first — the design thinking in RED phase is half of TDD's value |
 
 ---
 
-## 完成标准
+## Red Flags — You Are Skipping Quality Assurance
 
-每个子功能完成时：
-- [ ] TDD 三元组完成（RED→GREEN→REFACTOR，各一次 git commit）
-- [ ] L4 签名验证完成（≥3 个关键方法签名与源码一致）
-- [ ] 8 维审查完成（P0=0, P1=0）
-- [ ] 子功能全量测试通过（4 类场景全覆盖）
-- [ ] 审查结果和测试覆盖已记录 roadmap §5
+| What You Think | The Truth |
+|----------------|-----------|
+| "This feature is too simple, no need for review" | Simple code has boundary bugs too. Simple = review is faster = no excuse. |
+| "I can review it myself, no need for 8 reviewers" | You have blind spots reviewing your own code. Independent reviewers don't carry the implementer's assumptions. |
+| "The change is tiny, just quickly go through it" | One wrong line can cost 2 hours of debugging. Small changes still need 8-Dimension Review. |
+| "8 reviewers is too many, 3-4 is enough" | The 4 dimensions you skip are the escape hatches for bugs. |
+| "Write the implementation first, add tests later" | Tests added later become "verify implementation" not "verify behavior." Half of TDD's value is in the RED phase. |
+| "I'll just run integration tests manually" | Manual testing = tested this time, forgotten next time. Automation means reproducible every time. |
+| "The reviewer flagged an issue but I think it's fine" | Don't override the reviewer. Independent judgment covers your blind spots. |
 
-全部子功能完成后：
-- [ ] 全场景集成测试通过（4 个跨功能场景）
-- [ ] 所有测试绿
-- [ ] 进入 closing-the-loop
+---
+
+## Completion Criteria
+
+Per sub-function completion:
+- [ ] TDD Triplet complete (RED→GREEN→REFACTOR, one git commit each)
+- [ ] L4 Signature Verification complete (≥3 key method signatures verified against source)
+- [ ] 8-Dimension Review complete (P0=0, P1=0)
+- [ ] Sub-function Full Testing passed (4 scenario types fully covered)
+- [ ] Review results and test coverage recorded in roadmap §5
+
+After all sub-functions complete:
+- [ ] Full-Scenario Integration Testing passed (4 cross-feature scenarios)
+- [ ] All tests green
+- [ ] Enter closing-the-loop

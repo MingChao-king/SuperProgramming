@@ -1,169 +1,169 @@
 ---
 name: closing-the-loop
-description: 所有任务完成后激活。确认实现完整性 → roadmap 记录 → 跨项目经验提炼 → 分支收尾 → 本地 git commit。刚性技能。
+description: Activate after all tasks are complete. Confirm implementation integrity → roadmap recording → cross-project experience extraction → branch cleanup → local git commit. Rigid skill.
 ---
 
 <EXTREMELY-IMPORTANT>
-此技能是刚性技能。任何一步都不能跳过。没有闭环，知识就无法积累，下一次任务仍然是冷启动。
-未完成闭环 = 任务未交付。
+This skill is a Rigid skill. Not a single step may be skipped. Without closing the loop, knowledge cannot accumulate, and the next task will be a cold start again.
+Incomplete closing-the-loop = task not delivered.
 </EXTREMELY-IMPORTANT>
 
-# Closing the Loop：闭环确认 + 经验提炼 + 收尾
+# Closing the Loop: Integrity Confirmation + Experience Extraction + Wrap-Up
 
-## 技能类型：刚性
+## Skill Type: Rigid
 
-严格遵循。闭环是编码的一部分，不是可选的附加步骤。
-
----
-
-## 核心哲学
-
-**每一次编码不只是完成当前任务，而是为未来所有项目积累资产。**
-
-```
-没有闭环：每次任务 → 冷启动 → 从零开始
-有闭环：  每次任务 → 命中已有模式 → 快速完成 → 回写新经验
-```
+Follow strictly. Closing the loop is part of coding, not an optional add-on step.
 
 ---
 
-## 钢印 5 项（逐项确认）
+## Core Philosophy
 
-### 1. 确认实现完整性
+**Every coding session is not just about completing the current task — it is about accumulating assets for all future projects.**
 
-对照 writing-plans 计划逐项核对：
+```
+Without closing the loop: every task → cold start → start from scratch
+With closing the loop:   every task → hit existing patterns → complete quickly → write back new experience
+```
 
-- [ ] 所有任务组 TDD 三元组已完成？
-- [ ] 所有子功能 8 维审查通过（P0=0, P1=0）？
-- [ ] 所有子功能全量测试通过？
-- [ ] 全场景集成测试通过？
+---
 
-**任一项未完成 → 停止，退回 implementing 补全。**
+## Core Checklist — 5 Items (Confirm One by One)
 
-### 2. 代码仓库 Git Commit
+### 1. Confirm Implementation Integrity
+
+Check against the writing-plans plan item by item:
+
+- [ ] All task group TDD Triplets completed?
+- [ ] All sub-function 8-dimension reviews passed (P0=0, P1=0)?
+- [ ] All sub-function full testing passed?
+- [ ] Full-scenario integration testing passed?
+
+**Any item incomplete → stop, return to implementing to complete it.**
+
+### 2. Code Repository Git Commit
 
 ```bash
-cd {项目目录} && git add -A && git commit -m "{描述}"
+cd {project directory} && git add -A && git commit -m "{description}"
 ```
 
-**只做本地 commit，不 push。**（用户指定：代码之外的 Git 操作均在本地进行。）
+**Local commit only, no push.** (User specified: all Git operations beyond code stay local.)
 
-判据：`git status` 干净。
+Criterion: `git status` is clean.
 
-### 3. Roadmap 追加
+### 3. Roadmap Append
 
-**主代理执行**（roadmap 需要全局视角）。向 `knowledge-base/{项目名}/{项目名}-roadmap.md` 追加：
+**Main agent executes** (roadmap requires global perspective). Append to `knowledge-base/{project-name}/{project-name}-roadmap.md`:
 
-#### §5 实现记录新增行
+#### §5 Implementation Record — New Row
 
 ```markdown
-| 日期 | 步骤 | 做了什么 | 涉及文件 | 验证结果 |
-|------|------|---------|---------|---------|
-| 06-23 | N | {描述} | {文件列表} | ✅ 审查通过 / ✅ 测试通过 |
+| Date | Step | What Was Done | Files Involved | Verification Result |
+|------|------|--------------|---------------|--------------------|
+| 06-23 | N | {description} | {file list} | ✅ Review passed / ✅ Tests passed |
 ```
 
-#### §2 阶段规划更新
-- 完成的 Feature 打勾
-- 新增的 Feature 追加
+#### §2 Phase Plan Update
+- Check off completed Features
+- Append newly added Features
 
-#### §3 接口清单更新（如有新增 API/技能/组件）
-- 后端：新增 API 端点
-- 前端：新增组件/路由
-- 插件：新增技能/Hook
+#### §3 Interface Inventory Update (if new APIs/skills/components added)
+- Backend: new API endpoints
+- Frontend: new components/routes
+- Plugin: new skills/hooks
 
-#### §4 封装方法索引更新（如有新增封装方法）
-- 记录新增的 Service 方法、工具类、DTO 等
+#### §4 Encapsulated Method Index Update (if new encapsulated methods added)
+- Record new Service methods, utility classes, DTOs, etc.
 
-### 4. 跨项目经验提炼（§6）
+### 4. Cross-Project Experience Extraction (§6)
 
-**判断本次任务是否有可跨项目复用的经验：**
-
-```
-发现依赖版本陷阱？框架配置反模式？跨项目通用解法？技术坑？性能优化模式？
-  ├─ 任一 → 委派 subagent 搜索 knowledge-base/通用编码经验.md
-  │         ├─ 已有相关条目 → 合并追加
-  │         └─ 无相关条目 → 新增条目（按 L2 格式：✅推荐 + ❌避免 + 代码对比）
-  └─ 都没有 → roadmap §6 记录"本次无 L2 回写"
-```
-
-**L2 回写用 subagent 委派**（通用编码经验.md 可能数万行，节省主上下文）：
+**Determine whether this task has cross-project reusable experience:**
 
 ```
-你是 closing-the-loop 回写子代理。请完成知识库经验提炼：
-
-本次任务摘要：
-- 做了什么：[描述]
-- 涉及文件：[列表]
-- 踩到的坑：[描述，如无写"无"]
-- 跨项目经验：[描述，如无写"无"]
-
-你的工作：
-1. 读取 knowledge-base/通用编码经验.md
-2. 判断本次经验是否已有相关条目
-   - 已有 → 合并追加
-   - 无 → 按 L2 格式新增
-3. 更新 knowledge-base/{项目名}/{项目名}-roadmap.md §6（经验提炼）
-4. 回报：修改了哪些文件 + 修改内容摘要
+Discovered a dependency version pitfall? Framework configuration anti-pattern? Cross-project universal solution? Technical pitfall? Performance optimization pattern?
+  ├─ Any of the above → delegate subagent to search knowledge-base/通用编码经验.md
+  │         ├─ Related entry exists → merge and append
+  │         └─ No related entry → create new entry (in L2 format: ✅ Recommend + ❌ Avoid + code comparison)
+  └─ None of the above → record in roadmap §6: "No L2 write-back for this task"
 ```
 
-### 5. 分支收尾
-
-所有任务完成后：
+**L2 write-back delegated to subagent** (通用编码经验.md may be tens of thousands of lines — saves main context):
 
 ```
-→ 展示选项：
-  ├─ 合并到 main/master（直接合并或 PR）
-  ├─ 保留分支（仍有后续工作）
-  └─ 丢弃分支（实验性工作）
-→ 清理 git worktree（如有使用）
-→ 删除已合并的本地分支
+You are a closing-the-loop write-back subagent. Complete the knowledge base experience extraction:
+
+Task Summary:
+- What was done: [description]
+- Files involved: [list]
+- Pitfalls encountered: [describe, or "None"]
+- Cross-project experience: [describe, or "None"]
+
+Your work:
+1. Read knowledge-base/通用编码经验.md
+2. Determine whether this experience already has a related entry
+   - Exists → merge and append
+   - Does not exist → create new entry in L2 format
+3. Update knowledge-base/{project-name}/{project-name}-roadmap.md §6 (Experience Extraction)
+4. Report back: which files were modified + summary of modifications
+```
+
+### 5. Branch Wrap-Up
+
+After all tasks are complete:
+
+```
+→ Present options:
+  ├─ Merge into main/master (direct merge or PR)
+  ├─ Keep branch (follow-up work remains)
+  └─ Discard branch (experimental work)
+→ Clean up git worktrees (if any were used)
+→ Delete merged local branches
 ```
 
 ---
 
-## Closing the Loop（mini）
+## Closing the Loop (mini)
 
-配置变更、hotfix 等不产生新功能的任务，走精简版：
+Config changes, hotfixes, and other tasks that don't produce new features use the simplified version:
 
-| 钢印项 | 完整版 | mini 版 |
-|--------|--------|---------|
-| 1. 实现完整性确认 | ✅ | ✅ |
-| 2. Git commit（本地） | ✅ | ✅ |
-| 3. Roadmap 追加 | ✅ | ✅（仅 §5 一行） |
-| 4. L2 经验提炼 | ✅ | ❌（除非有新技术知识） |
-| 5. 分支收尾 | ✅ | ❌ |
-
----
-
-## Subagent 委派建议
-
-| 操作 | 执行者 | 原因 |
-|------|--------|------|
-| Roadmap §5 实现记录追加 | 主代理 | 需要全局视角 |
-| Roadmap §2/§3/§4 更新 | 主代理 | 需要架构判断 |
-| L2 通用编码经验搜索+更新 | Subagent | 文件可能数万行 |
-| Git commit | Subagent | 纯机械操作 |
-| 分支合并/清理 | Subagent | 纯机械操作 |
+| Core Checklist Item | Full Version | Mini Version |
+|--------------------|-------------|-------------|
+| 1. Implementation integrity confirmation | ✅ | ✅ |
+| 2. Git commit (local) | ✅ | ✅ |
+| 3. Roadmap append | ✅ | ✅ (§5 one row only) |
+| 4. L2 experience extraction | ✅ | ❌ (unless new technical knowledge) |
+| 5. Branch wrap-up | ✅ | ❌ |
 
 ---
 
-## Red Flags — 你在跳过闭环
+## Subagent Delegation Suggestions
 
-| 你的想法 | 真相 |
-|---------|------|
-| "这次改动太小了，不值得记" | 最宝贵的经验来自小改动。不记 = 下次还会踩。 |
-| "太累了，下次再回写" | 现在不写 = 下次冷启动。现在的 2 分钟换下次的 20 分钟。 |
-| "roadmap 等有空再更新" | roadmap 是任务的最后一步。不更新 = 任务没完成。 |
-| "这个经验只对这个项目有用" | 先判断再下结论。很多"项目专属"经验其实是跨项目通用的。 |
-| "分支不用收尾，留着就行" | 未清理的分支会堆积。每次闭环检查一次。 |
+| Operation | Executor | Reason |
+|-----------|---------|--------|
+| Roadmap §5 implementation record append | Main agent | Requires global perspective |
+| Roadmap §2/§3/§4 update | Main agent | Requires architectural judgment |
+| L2 general coding experience search + update | Subagent | File may be tens of thousands of lines |
+| Git commit | Subagent | Purely mechanical operation |
+| Branch merge/cleanup | Subagent | Purely mechanical operation |
 
 ---
 
-## 完成标准
+## Red Flags — You Are Skipping Closing the Loop
 
-- [ ] 1. 所有子功能完成 + 审查通过 + 测试通过（对照 writing-plans）
-- [ ] 2. 代码已 git commit（本地）
-- [ ] 3. Roadmap §2/§3/§4/§5 已更新
-- [ ] 4. L2 经验提炼已完成（有则回写，无则记录"本次无"）
-- [ ] 5. Roadmap §6 已更新
-- [ ] 6. 分支收尾选项已展示
+| Your Thought | Reality |
+|-------------|---------|
+| "This change is too small to be worth recording" | The most valuable experiences come from small changes. Not recording = stepping on the same rake next time. |
+| "Too tired, I'll write back next time" | Not writing now = cold start next time. 2 minutes now saves 20 minutes next time. |
+| "I'll update the roadmap when I have time" | Roadmap update is the last step of the task. Not updating = task not complete. |
+| "This experience only applies to this project" | Judge first, conclude later. Many "project-specific" experiences are actually cross-project reusable. |
+| "No need to clean up branches, just leave them" | Uncleaned branches pile up. Check once at every closing-the-loop. |
+
+---
+
+## Completion Criteria
+
+- [ ] 1. All sub-functions completed + reviews passed + tests passed (cross-checked against writing-plans)
+- [ ] 2. Code has been git committed (local)
+- [ ] 3. Roadmap §2/§3/§4/§5 updated
+- [ ] 4. L2 experience extraction completed (write back if applicable, otherwise record "None for this task")
+- [ ] 5. Roadmap §6 updated
+- [ ] 6. Branch wrap-up options presented

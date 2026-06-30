@@ -1,6 +1,6 @@
 {
   "name": "superprogramming-marketplace",
-  "description": "SuperProgramming v3.0 开发方法论插件市场",
+  "description": "SuperProgramming v3.0 Development Methodology Plugin Marketplace",
   "owner": {
     "name": "MingChao",
     "email": "mingchao@example.com"
@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "superprogramming",
-      "description": "SuperProgramming v3.0：5技能精简工作流 + Roadmap 6节统一真相源 + 功能级细粒度质量保证。brainstorming → writing-plans → implementing(逐功能TDD→审查→测试) → closing-the-loop。",
+      "description": "SuperProgramming v3.0: 5-skill streamlined workflow + 6-section roadmap as single source of truth + per-function fine-grained quality assurance. brainstorming → writing-plans → implementing(per-function TDD→review→test) → closing-the-loop.",
       "version": "3.0.0",
       "source": "./",
       "author": {

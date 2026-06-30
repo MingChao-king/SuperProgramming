@@ -49,9 +49,9 @@ Use the `Skill` tool with these exact names. **Never read skill files manually.*
 
 ## Workflow
 ```
-brainstorming → writing-plans → implementing(per-function: TDD→review→test) → closing-the-loop
-                                                                                 ↑
-                                                               hotfix ──────────┘
+brainstorming → writing-plans → implementing(逐功能: TDD→审查→测试) → closing-the-loop
+                                                                           ↑
+                                                         hotfix ──────────┘
 ```
 
 ## Hard Gates

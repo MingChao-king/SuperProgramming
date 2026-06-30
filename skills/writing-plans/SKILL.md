@@ -1,182 +1,182 @@
 ---
 name: writing-plans
-description: 设计获批后激活。将工作拆分为功能级 TDD 三元组任务 → 引用 roadmap §4 防重复 → 标注 L2/L3 复用。计划末尾引用 implementing 和 closing-the-loop。柔性技能。
+description: Activate after design is approved. Break work into function-level TDD Triplet tasks → reference roadmap §4 Anti-Duplication → annotate L2/L3 reuse. Reference implementing and closing-the-loop at end of plan. Flexible skill.
 ---
 
 <EXTREMELY-IMPORTANT>
-设计大纲批准后，你必须使用此技能来制定实施计划。
-每个功能任务必须拆成 RED→GREEN→REFACTOR 三元组。不允许"先写代码后补测试"。
-计划末尾必须引用 implementing（逐功能实现+审查+测试）和 closing-the-loop（闭环）。
+After the design outline is approved, you MUST use this skill to create the implementation plan.
+Every function task MUST be broken into RED→GREEN→REFACTOR Triplet. "Write code first, add tests later" is forbidden.
+The plan MUST reference implementing (per-function implementation + review + testing) and closing-the-loop at the end.
 </EXTREMELY-IMPORTANT>
 
-# Writing Plans：功能拆分 + 防重复 + 复用标注
+# Writing Plans: Function Breakdown + Anti-Duplication + Reuse Annotation
 
-## 技能类型：柔性
+## Skill Type: Flexible
 
-任务拆分的粒度和分组可适配上下文，但 TDD 三元组结构、防重复检查、执行链完整性是强制的。
-
----
-
-## 执行链
-
-```
-brainstorming(设计大纲) → writing-plans(拆TDD三元组) → implementing(逐功能) → closing-the-loop
-```
-
-**implementing 承载了实现、审查、测试三个阶段。** writing-plans 负责拆分任务 + 标注复用，不负责定义如何审查和测试——那是 implementing 的职责。
+The granularity and grouping of task breakdown may adapt to context, but the TDD Triplet structure, Anti-Duplication checks, and execution chain completeness are mandatory.
 
 ---
 
-## 第一步：功能拆分 — TDD 三元组
-
-### 拆分粒度标准
-
-| 太粗 | 刚好 |
-|------|------|
-| "实现用户认证模块" | 拆为：登录、注册、token刷新，各走 TDD 三元组 |
-| "重构数据库层" | 拆为：改连接配置、改查询方法、改事务边界，各走 TDD |
-
-**一个功能 = 一个可独立验证的用户可见行为。** 拆分后每个功能走一轮完整的 implementing（TDD → 审查 → 测试）。
-
-### 项目类型自适应
-
-| 项目类型 | 功能拆分单元 | "测试通过"含义 |
-|---------|-------------|---------------|
-| **后端** | API 端点 / Service 方法 | 接口返回正确 + 边界覆盖 |
-| **前端** | 组件 / 页面 / 路由 | 渲染正确 + 交互行为正确 |
-| **全栈** | 前端功能 + 后端接口（成对） | 前端→后端→返回全链路 |
-| **插件** | 技能 / Hook / 配置 | 内容完整 + 格式正确 |
-
-### TDD 三元组模板（强制）
+## Execution Chain
 
 ```
-任务组 X：{功能描述}
-
-X-R  RED：先写测试
-     ├─ 文件：测试文件路径
-     ├─ 内容：基于 brainstorming 的 2 层 × 4 类场景写测试
-     ├─ 验证：测试 → FAIL（红）
-     └─ 提交：git commit -m "RED: {场景描述}"
-
-X-G  GREEN：最小实现
-     ├─ 文件：实现文件路径
-     ├─ 内容：只写让 X-R 测试通过的代码，YAGNI
-     ├─ L4 签名验证：Read 至少 3 个调用的关键方法签名
-     ├─ 验证：测试 → PASS（绿）
-     ├─ 依赖：X-R
-     └─ 提交：git commit -m "GREEN: {实现描述}"
-
-X-F  REFACTOR：清理
-     ├─ 文件：同 X-G
-     ├─ 内容：消除重复、改善命名、提取常量、保持测试绿
-     ├─ 验证：测试 → PASS
-     ├─ 依赖：X-G
-     └─ 提交：git commit -m "REFACTOR: {清理描述}"
+brainstorming(design outline) → writing-plans(break into TDD Triplets) → implementing(per function) → closing-the-loop
 ```
 
-### 依赖方向
-
-```
-❌ 错误：D3 (实现 Service) → T1 (测试 Service)    ← Waterfall
-✅ 正确：T1-R → T1-G → T1-F（GREEN 依赖 RED）
-```
-
-### 纯数据结构豁免
-
-Entity/Enum/DTO 只含字段声明/getter/setter/注解，没有任何 `if`/`for`/`throw`/`return` → 可跳过 TDD，标注"无 TDD（纯数据结构）"。有任一分支或循环 → 必须三元组。
+**implementing carries the three phases of implementation, review, and testing.** writing-plans is responsible for task breakdown + reuse annotation, not for defining how to review and test — that is implementing's responsibility.
 
 ---
 
-## 第二步：防重复造轮子（强制检查清单）
+## Step 1: Function Breakdown — TDD Triplet
 
-**在规划每个新类/方法之前，逐项执行。**
+### Granularity Standard
 
-| # | 检查项 | 操作 |
-|---|--------|------|
-| 1 | **先查 roadmap §4** | 读取 `{项目}-roadmap.md` §4（现有封装方法索引），确认无类似封装 |
-| 2 | 新 Service 方法？ | Grep 方法名 `**/service/**/*.java` |
-| 3 | 新 DTO/VO？ | Glob `**/dto/**`, `**/vo/**` |
-| 4 | 新工具方法？ | Grep 方法签名 `**/utils/**`, `**/common/**` |
-| 5 | 新 Mapper 方法？ | Grep 方法名 `**/mapper/**` |
-| 6 | 新常量/枚举？ | Grep 常量名 `**/enums/**` |
-| 7 | 新依赖？ | Grep artifactId `pom.xml` |
-| 8 | 功能相似方法？ | Grep 业务关键词 `**/*.java`（模糊搜索） |
+| Too Coarse | Just Right |
+|-----------|-------------|
+| "Implement user authentication module" | Break into: login, register, token refresh — each goes through TDD Triplet |
+| "Refactor database layer" | Break into: change connection config, change query methods, change transaction boundaries — each goes through TDD |
 
-**判据**：已有方法名差 ≤2 词且参数列表基本相同 → 复用。已有 DTO 覆盖 ≥80% 字段 → 扩展字段。
+**One function = one independently verifiable, user-visible behavior.** After breakdown, each function goes through one complete implementing cycle (TDD → review → testing).
 
-**roadmap §4 优先于代码搜索。** roadmap 已索引了项目的封装方法，先查 roadmap 避免遗漏。
+### Project Type Adaptation
+
+| Project Type | Function Breakdown Unit | "Test Passes" Meaning |
+|-------------|------------------------|----------------------|
+| **Backend** | API endpoint / Service method | Correct response + boundary coverage |
+| **Frontend** | Component / Page / Route | Correct rendering + correct interaction behavior |
+| **Full-stack** | Frontend function + Backend endpoint (paired) | Frontend→Backend→Response full chain |
+| **Plugin** | Skill / Hook / Config | Complete content + correct format |
+
+### TDD Triplet Template (Mandatory)
+
+```
+Task Group X: {function description}
+
+X-R  RED: Write test first
+     ├─ File: test file path
+     ├─ Content: Write tests based on brainstorming's 2-layer × 4-category scenarios
+     ├─ Verify: Tests → FAIL (Red)
+     └─ Commit: git commit -m "RED: {scenario description}"
+
+X-G  GREEN: Minimal implementation
+     ├─ File: implementation file path
+     ├─ Content: Write only the code that makes X-R tests pass, YAGNI
+     ├─ L4 Signature Verification: Read at least 3 key method signatures being called
+     ├─ Verify: Tests → PASS (Green)
+     ├─ Depends on: X-R
+     └─ Commit: git commit -m "GREEN: {implementation description}"
+
+X-F  REFACTOR: Clean up
+     ├─ File: same as X-G
+     ├─ Content: Eliminate duplication, improve naming, extract constants, keep tests green
+     ├─ Verify: Tests → PASS
+     ├─ Depends on: X-G
+     └─ Commit: git commit -m "REFACTOR: {cleanup description}"
+```
+
+### Dependency Direction
+
+```
+❌ Wrong: D3 (implement Service) → T1 (test Service)    ← Waterfall
+✅ Right: T1-R → T1-G → T1-F (GREEN depends on RED)
+```
+
+### Pure Data Structure Exemption
+
+Entity/Enum/DTO containing only field declarations/getters/setters/annotations, with zero `if`/`for`/`throw`/`return` → may skip TDD, annotate "No TDD (pure data structure)." Any branch or loop → must use Triplet.
 
 ---
 
-## 第三步：L2/L3 复用标注
+## Step 2: Anti-Duplication (Mandatory Checklist)
 
-从 brainstorming 的 L4 勘探结果中，标注每个任务可复用的组件：
+**Execute item by item before planning each new class/method.**
 
-```
-任务组 T1：CouponTemplateService
-  T1-R → 复用：已有 Service 测试模式（参考 XxxServiceTest）
-  T1-G → 复用：BaseEntity 的 createTime/updateTime
-```
+| # | Check Item | Action |
+|---|-----------|--------|
+| 1 | **Check roadmap §4 first** | Read `knowledge-base/{project-name}/{project-name}-roadmap.md` §4 (existing encapsulated method index), confirm no similar encapsulation |
+| 2 | New Service method? | Grep method name `**/service/**/*.java` |
+| 3 | New DTO/VO? | Glob `**/dto/**`, `**/vo/**` |
+| 4 | New util method? | Grep method signature `**/utils/**`, `**/common/**` |
+| 5 | New Mapper method? | Grep method name `**/mapper/**` |
+| 6 | New constant/enum? | Grep constant name `**/enums/**` |
+| 7 | New dependency? | Grep artifactId `pom.xml` |
+| 8 | Functionally similar method? | Grep business keyword `**/*.java` (fuzzy search) |
 
-**L2 搜索**：在 `knowledge-base/通用编码经验.md` 中搜索当前问题域的最优解。**推荐使用 subagent 搜索**（L2 文件可能数万行，节省主上下文）。
+**Judgment criteria**: Existing method name differs by ≤2 words AND parameter list is essentially the same → reuse. Existing DTO covers ≥80% of fields → extend fields.
+
+**roadmap §4 takes priority over code search.** The roadmap already indexes the project's encapsulated methods — check roadmap first to avoid missing anything.
 
 ---
 
-## 计划输出格式
+## Step 3: L2/L3 Reuse Annotation
+
+From brainstorming's L4 exploration results, annotate reusable components for each task:
+
+```
+Task Group T1: CouponTemplateService
+  T1-R → Reuse: Existing Service test pattern (reference XxxServiceTest)
+  T1-G → Reuse: BaseEntity's createTime/updateTime
+```
+
+**L2 Search**: Search `knowledge-base/通用编码经验.md` for optimal solutions in the current problem domain. **Subagent search is recommended** (L2 file may be tens of thousands of lines — saves main context).
+
+---
+
+## Plan Output Format
 
 ```markdown
-## 实施计划：{功能名称}
+## Implementation Plan: {feature name}
 
-> 关联设计大纲：{roadmap 阶段} | 项目类型：{后端/前端/全栈/插件}
+> Linked Design Outline: {roadmap phase} | Project Type: {backend/frontend/full-stack/plugin}
 
-### 复用组件汇总
-| 已有组件 | 路径 | 来源 | 用于任务 |
-|---------|------|------|---------|
+### Reusable Component Summary
+| Existing Component | Path | Source | Used In |
+|-------------------|------|--------|---------|
 | xxx | xxx.java | roadmap §4 | T1-G |
 
-### 功能级任务组
+### Function-Level Task Groups
 
-#### 任务组 X：{功能描述}
-| # | 子任务 | 文件 | 要点 | 验证 | 依赖 |
-|---|--------|------|------|------|------|
-| X-R | RED: {测试描述} | 测试文件 | 2层×4类场景 | 测试 → FAIL | — |
-| X-G | GREEN: {实现描述} | 实现文件 | 最小实现+L4验≥3签名 | 测试 → PASS | X-R |
-| X-F | REFACTOR: {清理描述} | 同 X-G | DRY+命名+常量 | 测试 → PASS | X-G |
+#### Task Group X: {function description}
+| # | Sub-Task | File | Key Points | Verification | Depends On |
+|---|----------|------|-----------|-------------|------------|
+| X-R | RED: {test description} | Test file | 2-layer × 4-category scenarios | Tests → FAIL | — |
+| X-G | GREEN: {implementation description} | Impl file | Minimal impl + L4 verify ≥3 signatures | Tests → PASS | X-R |
+| X-F | REFACTOR: {cleanup description} | Same as X-G | DRY + naming + constants | Tests → PASS | X-G |
 
-#### 纯数据结构任务
-| # | 任务 | 文件 | 验证 | 依赖 |
-|---|------|------|------|------|
-| B1 | 创建 XxxEnum | enums/XxxEnum.java | 编译通过 | — |
+#### Pure Data Structure Tasks
+| # | Task | File | Verification | Depends On |
+|---|------|------|-------------|------------|
+| B1 | Create XxxEnum | enums/XxxEnum.java | Compiles | — |
 
-### 执行顺序
+### Execution Order
 
-每个任务组独立走 implementing（TDD → 审查 → 子功能全量测试）。
-全部任务组通过后，执行全场景集成测试。
-最后执行 closing-the-loop。
+Each task group independently goes through implementing (TDD → review → sub-function full testing).
+After all task groups pass, execute full-scenario integration testing.
+Finally execute closing-the-loop.
 ```
 
 ---
 
-## Red Flags — 你的计划有结构性问题
+## Red Flags — Your Plan Has Structural Problems
 
-| 你的想法 | 真相 |
-|---------|------|
-| "先把所有实现列完，测试放最后一个阶段" | 这是 Waterfall。TDD 要求每个功能前面有 RED。 |
-| "写一个新的更快，搜索已有的太慢" | 写新的 5 分钟 + 调试 20 分钟。先查 roadmap §4，再 Grep，总共 2 分钟。 |
-| "测试依赖实现，所以实现必须先做完" | 依赖方向反了。RED 先写，GREEN 依赖 RED。 |
-| "这个功能太特殊，肯定没有现成的" | 先查 roadmap §4——它就是为了回答"有没有现成的"而存在的。 |
-| "计划就是任务列表，执行链是执行时的事" | 计划结构决定执行结构。测试放最后 → 执行时就是"写完再补测试"。 |
+| Your Thought | Reality |
+|-------------|---------|
+| "List all implementations first, put testing as the last phase" | This is Waterfall. TDD requires RED before every function. |
+| "Writing a new one is faster, searching for existing ones is too slow" | Writing new: 5 min + debugging: 20 min. Check roadmap §4 first, then Grep — total 2 min. |
+| "Tests depend on implementation, so implementation must be done first" | Dependency direction is reversed. RED is written first, GREEN depends on RED. |
+| "This function is too special, there's definitely nothing existing" | Check roadmap §4 first — it exists precisely to answer "is there something existing?" |
+| "The plan is just a task list, execution chain is something for execution time" | Plan structure determines execution structure. Tests at the end → execution becomes "write code then backfill tests." |
 
 ---
 
-## 完成标准
+## Completion Criteria
 
-进入 implementing 前必须确认：
+Must confirm before entering implementing:
 
-- [ ] 所有功能已拆分为 RED → GREEN → REFACTOR 三元组（纯数据结构除外）
-- [ ] 每个三元组依赖方向正确（GREEN 依赖 RED）
-- [ ] 防重复检查已执行（roadmap §4 + Grep 共 8 项）
-- [ ] 每个任务标注了可复用的已有组件
-- [ ] L2 搜索已完成（推荐 subagent），相关模式已标注
-- [ ] 无独立"测试阶段"——测试已交织在功能三元组中
-- [ ] 用户已确认任务清单
+- [ ] All functions broken into RED → GREEN → REFACTOR Triplets (pure data structures excepted)
+- [ ] Each Triplet has correct dependency direction (GREEN depends on RED)
+- [ ] Anti-Duplication checks executed (roadmap §4 + Grep, 8 items total)
+- [ ] Each task annotated with reusable existing components
+- [ ] L2 search completed (subagent recommended), relevant patterns annotated
+- [ ] No standalone "testing phase" — testing is interleaved within function Triplets
+- [ ] User has confirmed the task list

@@ -1,240 +1,225 @@
 ---
 name: brainstorming
-description: 任何编码开始前激活。苏格拉底式需求澄清 → 项目类型检测 → L4勘探 → 大纲先行 → 保存6节roadmap。柔性技能。
+description: Activated before any coding begins. Socratic requirements clarification → project type detection → L4 exploration → outline-first design → save to 6-section roadmap. Flexible skill.
 ---
 
 <EXTREMELY-IMPORTANT>
-在任何编码任务开始之前，你必须使用此技能。不要直接跳到写代码。
-即使你认为"需求已经很清楚了"，也要走一遍这个流程。
+You must use this skill before any coding task begins. Do not jump straight to writing code.
+Even if you think "the requirements are already clear," walk through this process.
 </EXTREMELY-IMPORTANT>
 
-# Brainstorming：需求澄清 + 项目类型检测 + L4 勘探 + 大纲先行
+# Brainstorming: Requirements Clarification + Project Type Detection + L4 Exploration + Outline First
 
-## 技能类型：柔性
+## Skill Type: Flexible
 
-四个步骤一个都不能少。将原则适配到具体上下文。
-
----
-
-## 工作流
-
-```
-用户需求 → 第一步：需求澄清（苏格拉底式提问 + 测试场景设计）
-         → 第二步：项目类型检测 + L4 勘探（项目版图 + 可复用组件）
-         → 第三步：大纲先行（设计文档 → 保存 6 节 roadmap）
-         → Step 3.5：生成/更新项目 CLAUDE.md（首次运行时）
-         → 进入 writing-plans
-```
+All four steps are mandatory. Adapt the principles to the specific context.
 
 ---
 
-## 第一步：需求澄清
+## Workflow
 
-**不要假设你理解了用户的意图。** 用提问来提炼模糊的想法。
-
-### 苏格拉底式提问框架（至少覆盖 6 个维度）
-
-| 维度 | 要搞清楚的问题 |
-|------|---------------|
-| **目标** | 要解决什么问题？谁会用它？ |
-| **范围** | MVP 包含什么？什么明确不做？ |
-| **约束** | 技术栈限制？性能要求？兼容性？ |
-| **替代方案** | 有没有更简单的实现方式？现有工具/库能否直接解决？ |
-| **验收标准** | 怎么判断做完了？怎么算"正确"？ |
-| **测试场景** | 多用户隔离？权限边界？空值/null/极值？并发冲突？ |
-
-### 两层测试场景设计（必做）
-
-**实现会限制你的想象力。代码写完了再想测试，你只会测实现能通过的场景。**
-
-| 层级 | 覆盖范围 | 时机 |
-|------|---------|------|
-| **子功能全量测试** | 该功能的边界/null/异常/并发，每类 ≥2 条 | implementing 阶段每个子功能完成后 |
-| **全场景集成测试** | 跨功能的组合场景、完整业务流程 | 所有子功能通过后 |
-
-| 类别 | 示例 |
-|------|------|
-| **多用户/隔离** | 用户 A 的数据 ≠ 用户 B 的数据；不同角色的权限边界 |
-| **边界条件** | null、空列表、极大值、极短/超长输入 |
-| **并发/竞态** | 同时操作冲突？重复提交？ |
-| **异常路径** | 依赖服务挂了？超时？非法参数？ |
-
-每类每层至少 2 条测试场景，写入设计大纲的"测试场景设计"栏。
-
-### 关键行为准则
-
-- **分块展示设计**：分 3-5 个可消化部分呈现，每部分等用户确认后再继续
-- **主动提出替代方案**：看到更简单的方法就说出来
-- **明确标注不确定的**：标注"待确认"而不是猜测
-- **保存到 knowledge-base**：大纲保存到 `knowledge-base/{项目名}/{项目名}-roadmap.md`
+```
+User need → Step 1: Requirements Clarification (Socratic questioning + test scenario design)
+          → Step 2: Project Type Detection + L4 Exploration (project landscape + reusable components)
+          → Step 3: Outline First (design document → save 6-section roadmap to plugin knowledge-base)
+          → Proceed to writing-plans
+```
 
 ---
 
-## 第二步：项目类型检测 + L4 勘探
+## Step 1: Requirements Clarification
 
-### 2.1 项目类型检测（必做）
+**Do not assume you understand the user's intent.** Use questioning to refine vague ideas.
 
-**在勘探之前，先判断项目类型。** 不同类型走不同的勘探清单和实现策略。
+### Socratic Questioning Framework (cover at least 6 dimensions)
 
-自动检测规则：
+| Dimension | Questions to clarify |
+|-----------|---------------------|
+| **Goal** | What problem does it solve? Who will use it? |
+| **Scope** | What does the MVP include? What is explicitly out of scope? |
+| **Constraints** | Tech stack limitations? Performance requirements? Compatibility? |
+| **Alternatives** | Is there a simpler approach? Can existing tools/libraries solve this directly? |
+| **Acceptance Criteria** | How do we know it's done? What counts as "correct"? |
+| **Test Scenarios** | Multi-user isolation? Permission boundaries? Null/empty/extreme values? Concurrent conflicts? |
+
+### Two-Layer Test Scenario Design (mandatory)
+
+**Implementation limits your imagination. If you think about tests after writing code, you will only test scenarios the implementation can pass.**
+
+| Layer | Coverage | Timing |
+|-------|----------|--------|
+| **Sub-function Full Testing** | Boundary/null/exception/concurrency for each sub-function, >=2 items per category | After each sub-function completes during implementing phase |
+| **Cross-Scenario Integration Testing** | Combined scenarios across functions, complete business flows | After all sub-functions pass |
+
+| Category | Examples |
+|----------|----------|
+| **Multi-user / Isolation** | User A's data != User B's data; permission boundaries across roles |
+| **Boundary Conditions** | null, empty list, max value, extremely short/long input |
+| **Concurrency / Race Conditions** | Simultaneous operation conflicts? Duplicate submissions? |
+| **Exception Paths** | Dependent service down? Timeout? Invalid arguments? |
+
+At least 2 test scenarios per category per layer, written into the "Test Scenario Design" column of the design outline.
+
+### Key Behavioral Guidelines
+
+- **Present design in chunks**: Present in 3-5 digestible sections, wait for user confirmation on each before continuing
+- **Proactively suggest alternatives**: Speak up when you see a simpler approach
+- **Clearly mark uncertainties**: Mark as "TBD" rather than guessing
+- **Save to knowledge-base**: Save outline to `knowledge-base/{project-name}/{project-name}-roadmap.md`
+
+---
+
+## Step 2: Project Type Detection + L4 Exploration
+
+### 2.1 Project Type Detection (mandatory)
+
+**Before exploration, determine the project type.** Different types use different exploration checklists and implementation strategies.
+
+Auto-detection rules:
 
 ```
-检测项：
-├─ .claude-plugin/ 或 plugin.json 存在？ → 插件项目
-├─ pom.xml 或 build.gradle 存在？
-│   ├─ 同时有 package.json（vue/react/angular）？ → 全栈项目
-│   ├─ 仅 Java 构建文件？ → 纯后端项目
-│   └─ 仅 package.json？ → 纯前端项目
-└─ 无构建文件？ → 通用项目（文档/脚本）
+Detection items:
+├─ .claude-plugin/ or plugin.json exists? → Plugin project
+├─ pom.xml or build.gradle exists?
+│   ├─ Also has package.json (vue/react/angular)? → Full-stack project
+│   ├─ Java build file only? → Pure backend project
+│   └─ package.json only? → Pure frontend project
+└─ No build files? → General project (docs/scripts)
 ```
 
-| 项目类型 | 勘探重点 | Roadmap §3 记录内容 |
-|---------|---------|-------------------|
-| **后端** | 模块/端口/包结构、已有 DTO/Entity/Service | API 接口清单 |
-| **前端** | 组件树/路由/状态管理/API 调用模式 | 组件+路由清单 |
-| **全栈** | 前后端均勘探 | API + 组件清单 |
-| **插件** | 技能列表/Hook/配置 | 技能+Hook 清单 |
+| Project Type | Exploration Focus | Roadmap Section 3 Content |
+|-------------|-------------------|--------------------------|
+| **Backend** | Modules/ports/package structure, existing DTO/Entity/Service | API interface inventory |
+| **Frontend** | Component tree/routing/state management/API call patterns | Component + route inventory |
+| **Full-stack** | Explore both frontend and backend | API + component inventory |
+| **Plugin** | Skill list/Hooks/Configuration | Skill + hook inventory |
 
-**检测结果展示给用户确认后，写入 roadmap §1（项目概览）。**
+**Show detection results to user for confirmation, then write to roadmap Section 1 (Project Overview).**
 
-### 2.2 L4 项目勘探
+### 2.2 L4 Project Exploration
 
-**在不知道项目有什么之前，你不知道什么能做。L4 是唯一真相源。**
+**You cannot know what is possible without knowing what the project already has. L4 is the single source of truth.**
 
-#### 勘探清单
+#### Exploration Checklist
 
-| # | 目标 | 操作 |
-|---|------|------|
-| 1 | 项目结构 | 列出所有模块/服务、端口、包结构、职责 |
-| 2 | 已有 DTO/实体 | Glob `**/dto/**`, `**/entity/**`, `**/vo/**`（后端/全栈） |
-| 3 | 已有工具类 | Grep `**/utils/**`, `**/common/**` |
-| 4 | 已有接口 | Grep `interface.*Service`, `interface.*Mapper`（后端/全栈） |
-| 5 | 代码模式 | 找 3-5 个类似功能，看分页/异常处理/返回格式 |
-| 6 | 配置规则 | 配置文件在哪？Nacos？bootstrap？环境变量？ |
-| 7 | 依赖清单 | pom.xml / build.gradle 中已有的关键依赖 |
+| # | Target | Action |
+|---|--------|--------|
+| 1 | Project structure | List all modules/services, ports, package structure, responsibilities |
+| 2 | Existing DTOs/Entities | Glob `**/dto/**`, `**/entity/**`, `**/vo/**` (backend/full-stack) |
+| 3 | Existing utilities | Grep `**/utils/**`, `**/common/**` |
+| 4 | Existing interfaces | Grep `interface.*Service`, `interface.*Mapper` (backend/full-stack) |
+| 5 | Code patterns | Find 3-5 similar features, observe pagination/exception handling/response format |
+| 6 | Configuration rules | Where are config files? Nacos? bootstrap? Environment variables? |
+| 7 | Dependency inventory | Key dependencies already in pom.xml / build.gradle |
 
-**输出"项目版图速查"**：模块表 + 可复用关键类表 + 代码模式列表 + 本次需求相关组件。
+**Output a "Project Landscape Quick Reference"**: module table + reusable key class table + code pattern list + components relevant to the current need.
 
-**关键**：已有项目必须将现有封装方法、接口、实现形式记录到 roadmap §4（现有封装方法索引），后续实现时先查此节防重复造轮子。
+**Critical**: For existing projects, existing encapsulated methods, interfaces, and implementation patterns must be recorded in roadmap Section 4 (Existing Method Index). Check this section first to avoid reinventing the wheel during subsequent implementation.
 
-### 2.3 并行勘探模式（大项目推荐）
+### 2.3 Parallel Exploration Mode (recommended for large projects)
 
-项目有 **>5 个模块**或代码量很大时，将 7 项勘探清单拆分为 3-4 个并行 **Scout 子代理**：
+When a project has **>5 modules** or a large codebase, split the 7 exploration items into 3-4 parallel **Scout subagents**:
 
 ```
-并行派发 3-4 个 Scout 子代理（Agent 工具，只读）：
+Dispatch 3-4 Scout subagents in parallel (Agent tool, read-only):
 
-Scout A — 项目结构:
-  SCOPE: 项目根目录构建文件 + 所有模块目录
-  GOAL: 列出所有模块/服务名、端口、包结构、职责
-  RETURN: 模块表
+Scout A -- Project Structure:
+  SCOPE: Project root build files + all module directories
+  GOAL: List all module/service names, ports, package structure, responsibilities
+  RETURN: Module table
 
-Scout B — DTO/Entity + 工具类:
+Scout B -- DTO/Entity + Utilities:
   SCOPE: **\/dto/**, **\/entity/**, **\/vo/**, **\/utils/**, **\/common/**
-  GOAL: 找到已有 DTO/Entity/VO + 工具类
-  RETURN: 可复用类表
+  GOAL: Find existing DTO/Entity/VO + utility classes
+  RETURN: Reusable class table
 
-Scout C — 接口 + 代码模式:
+Scout C -- Interfaces + Code Patterns:
   SCOPE: **\/service/**, **\/controller/**
-  GOAL: 找到已有 Service/Controller 接口签名 + 3-5 个代码模式
-  RETURN: 接口列表 + 代码模式列表
+  GOAL: Find existing Service/Controller interface signatures + 3-5 code patterns
+  RETURN: Interface list + code pattern list
 
-Scout D — 配置 + 依赖:
+Scout D -- Configuration + Dependencies:
   SCOPE: **\/resources/*.yml|*.yaml|*.properties, pom.xml|build.gradle
-  GOAL: 列出配置项位置、关键依赖
-  RETURN: 配置摘要 + 依赖清单
+  GOAL: List configuration locations, key dependencies
+  RETURN: Configuration summary + dependency inventory
 ```
 
-**小项目（≤3 模块）**：主代理串行勘探即可。
+**Small projects (<=3 modules)**: Main agent does serial exploration.
 
 ---
 
-## 第三步：大纲先行
+## Step 3: Outline First
 
-**在写代码之前，必须先有设计大纲。没有蓝图的施工必然返工。**
+**Before writing code, you must have a design outline. Construction without a blueprint guarantees rework.**
 
-### 设计大纲必须包含
+### Design Outline Must Include
 
-| 要素 | 说明 |
-|------|------|
-| **要做什么** | 一句话 + 为什么 |
-| **模块划分** | 新建/修改哪些文件，各自职责 |
-| **数据流** | 数据从哪来 → 经过什么处理 → 到哪去 |
-| **关键决策** | 为什么选这个方案（含放弃的替代方案） |
-| **涉及文件** | 预估要改/新建的文件清单 |
-| **影响范围** | 改了会不会影响其他功能？ |
-| **验证方式** | 怎么确认改对了？ |
-| **测试场景设计** | 两层 × 4 类场景，每类 ≥2 条（来自第一步） |
-| **步骤 Checklist** | 可勾选的施工步骤 |
+| Element | Description |
+|---------|-------------|
+| **What to do** | One sentence + why |
+| **Module breakdown** | Which files to create/modify, their responsibilities |
+| **Data flow** | Where data comes from -> what processing -> where it goes |
+| **Key decisions** | Why this approach (including rejected alternatives) |
+| **Files involved** | Estimated list of files to modify/create |
+| **Impact scope** | Will changes affect other features? |
+| **Verification method** | How to confirm the change is correct? |
+| **Test scenario design** | Two layers x 4 categories, >=2 items per category (from Step 1) |
+| **Step checklist** | Actionable construction steps with checkboxes |
 
-### 保存到 6 节 Roadmap
+### Save to 6-Section Roadmap
 
-**所有项目统一使用 6 节 roadmap 结构（`{项目名}-roadmap.md`）**：
+**All projects use the unified 6-section roadmap structure (`{project-name}-roadmap.md`)**:
 
 ```markdown
-# {项目名} 项目路线
+# {Project Name} Project Roadmap
 
-## 1. 项目概览
-技术栈、架构决策、项目类型
+## 1. Project Overview
+Tech stack, architecture decisions, project type
 
-## 2. 阶段规划
-每阶段目标 + Feature 清单 + 状态
+## 2. Phase Planning
+Per-phase goals + feature list + status
 
-## 3. 接口清单
-后端 API / 前端组件路由 / 插件技能+Hook（按类型自适应）
+## 3. Interface Inventory
+Backend API / Frontend component routes / Plugin skills+hooks (adaptive by type)
 
-## 4. 现有封装方法索引
-已有项目的 Service/工具类/DTO/中间件等（防重复造轮子）
+## 4. Existing Method Index
+Existing project Service/utility classes/DTOs/middleware etc. (anti-duplication)
 
-## 5. 实现记录
-每功能的审查结果、测试覆盖、边界情况（按时间倒序）
+## 5. Implementation Records
+Per-feature review results, test coverage, edge cases (reverse chronological)
 
-## 6. 经验提炼
-本项目踩坑 + 可跨项目复用的模式
+## 6. Experience Extraction
+Project pitfalls + cross-project reusable patterns
 ```
 
-**新项目**：创建 `knowledge-base/{项目名}/` 文件夹，按此结构写入 roadmap。
+**New project**: Create `knowledge-base/{project-name}/` directory, write the roadmap following this structure.
 
-**已有项目新增功能**：展示设计大纲获确认后，追加到已有 roadmap 的对应节。
+**New feature on existing project**: Present design outline, get confirmation, then append to the corresponding section of the existing roadmap.
 
-**experience.md 处理**：已有项目如存在 experience.md，将其内容迁移到 roadmap §4（封装方法）+ §6（经验提炼），迁移后删除。不再创建新的 experience.md。
-
----
-
-## Step 3.5：生成/更新项目 CLAUDE.md（必做）
-
-设计大纲确认后，生成或更新 `{项目根目录}/CLAUDE.md`。Claude Code 每次会话自动加载此文件，零上下文成本。
-
-**操作**：
-1. 读取 `${CLAUDE_PLUGIN_ROOT}/CLAUDE-TEMPLATE.md`
-2. 将 `{PROJECT_NAME}`、`{DATE}` 等占位符替换为实际值
-3. 用 L4 勘探结果填充：项目结构、关键可复用组件、代码模式
-4. 写入 `{项目根目录}/CLAUDE.md`
-
-**已有 CLAUDE.md 时**：检查是否有 SuperProgramming 标记（搜索 "SuperProgramming"）。有则更新项目特定 section；无则询问用户是否合并。
+**experience.md handling**: If an existing project has an experience.md, migrate its content to roadmap Section 4 (encapsulated methods) + Section 6 (experience extraction), then delete it. Do not create new experience.md files.
 
 ---
 
-## Red Flags — 你在跳过思考
+## Red Flags -- You Are Skipping the Thinking
 
-| 你的想法 | 真相 |
-|---------|------|
-| "需求已经很清楚了" | 真清楚走一遍只需 2 分钟。花更久说明并不清楚。 |
-| "项目我很熟了，不用勘探" | 项目在变。至少验证前 3 个关键类的签名。 |
-| "就改一行，不写大纲" | 一行改错花 2 小时排查。花 30 秒写 mini 大纲。 |
-| "测试场景跑一遍代码就知道了" | 代码写完了再想测试已经晚了——实现限制思维。 |
-| "这个项目类型不用检测" | 类型决定勘探策略和 roadmap §3 内容。2 分钟检测省后续混乱。 |
+| Your Thought | The Truth |
+|-------------|-----------|
+| "The requirements are already clear" | If truly clear, walking through takes 2 minutes. Taking longer proves it's not clear. |
+| "I know this project well, no need to explore" | Projects change. At minimum, verify the signatures of the top 3 key classes. |
+| "It's just one line, no need for an outline" | One wrong line costs 2 hours to debug. Spend 30 seconds on a mini outline. |
+| "I'll figure out test scenarios by running the code" | Thinking about tests after writing code is too late -- implementation limits thinking. |
+| "No need to detect project type" | Type determines exploration strategy and roadmap Section 3 content. 2 minutes of detection saves confusion later. |
 
 ---
 
-## 完成标准
+## Completion Criteria
 
-进入 writing-plans 前必须确认：
+Before proceeding to writing-plans, confirm:
 
-- [ ] 用户需求已明确（目标、范围、约束、验收标准）
-- [ ] 项目类型已检测并确认
-- [ ] L4 项目版图已了解（模块/已有类/代码模式/配置）
-- [ ] 设计大纲已写出（含两层测试场景设计）
-- [ ] 用户已确认设计大纲
-- [ ] 大纲已保存到 6 节 roadmap（`knowledge-base/{项目名}/{项目名}-roadmap.md`）
-- [ ] 项目 CLAUDE.md 已生成或已验证（含 SuperProgramming 标记）
+- [ ] User requirements are clarified (goal, scope, constraints, acceptance criteria)
+- [ ] Project type detected and confirmed
+- [ ] L4 project landscape understood (modules/existing classes/code patterns/configuration)
+- [ ] Design outline written (including two-layer test scenario design)
+- [ ] User confirmed the design outline
+- [ ] Outline saved to 6-section roadmap (`knowledge-base/{project-name}/{project-name}-roadmap.md`)
+- [ ] Project information recorded only in plugin knowledge-base roadmap, not in project files
